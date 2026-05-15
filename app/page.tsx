@@ -6,46 +6,6 @@ import { Menu, X, Radio, Wifi, Activity, ChevronDown, Mail, Phone, MapPin } from
 import { AnimatedText } from "@/components/animated-text"
 import { MagneticDots } from "@/components/magnetic-dots"
 
-function AnimatedCounter({ value, suffix = "" }: { value: string; suffix?: string }) {
-  const [displayValue, setDisplayValue] = useState("0")
-  const ref = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          const numericStr = value.replace(/[^0-9.]/g, "")
-          const targetNum = Number.parseFloat(numericStr)
-          const unit = value.replace(/[0-9.]/g, "")
-
-          let current = 0
-          const increment = targetNum / 60
-          const interval = setInterval(() => {
-            current += increment
-            if (current >= targetNum) {
-              setDisplayValue(`${targetNum}${unit}`)
-              clearInterval(interval)
-            } else {
-              setDisplayValue(`${current.toFixed(1)}${unit}`.replace(".0", ""))
-            }
-          }, 16)
-
-          observer.disconnect()
-        }
-      },
-      { threshold: 0.5 },
-    )
-
-    if (ref.current) observer.observe(ref.current)
-    return () => observer.disconnect()
-  }, [value])
-
-  return (
-    <div className="text-4xl md:text-5xl font-mono" ref={ref}>
-      {displayValue}{suffix}
-    </div>
-  )
-}
 
 export default function FaradayPage() {
   const [isLoaded, setIsLoaded] = useState(false)
@@ -267,7 +227,7 @@ export default function FaradayPage() {
               <Button className="px-6 py-3 h-11 text-sm rounded-lg bg-[#25f860] text-[#0A0A0A] hover:bg-[#25f860]/90 font-semibold transition-all duration-300">
                 Замовити демо
               </Button>
-              <Button variant="outline" className="px-6 py-3 h-11 text-sm rounded-lg border-[#25f860]/30 text-[#F2F3F5] hover:bg-[#25f860]/10 hover:border-[#25f860]/50 transition-all duration-300">
+              <Button className="px-6 py-3 h-11 text-sm rounded-lg border border-[#25f860]/30 bg-transparent text-[#F2F3F5] hover:bg-[#25f860]/10 hover:border-[#25f860]/50 transition-all duration-300">
                 Технічна документація
               </Button>
             </div>
@@ -340,21 +300,21 @@ export default function FaradayPage() {
       </section>
 
       {/* Metrics Section */}
-      <section className="relative py-16 md:py-24 px-6 md:px-12 lg:px-24 border-y border-[#25f860]/10 animate-on-scroll">
+      <section className="relative py-12 md:py-20 px-6 md:px-12 lg:px-24 border-y border-[#25f860]/10 animate-on-scroll">
         <div className="max-w-5xl w-full mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-12">
             {[
-              { label: "ДІАПАЗОН ЧАСТОТ", value: "25", suffix: " МГц — 6 ГГц" },
-              { label: "ЧАС ВИЯВЛЕННЯ", value: "<2", suffix: " сек" },
-              { label: "ТОЧНІСТЬ ПЕЛЕНГУ", value: "±5", suffix: "°" },
-              { label: "ДАЛЬНІСТЬ", value: "50", suffix: " км+" },
+              { label: "Діапазон частот", value: "25 МГц — 6 ГГц" },
+              { label: "Час виявлення", value: "< 2 сек" },
+              { label: "Точність пеленгу", value: "± 5°" },
+              { label: "Дальність", value: "50 км+" },
             ].map((metric, i) => (
-              <div key={i} className="text-center">
-                <div className="text-[10px] md:text-xs uppercase tracking-[0.15em] text-[#A7ABB3] mb-3">
+              <div key={i} className="flex flex-col gap-1.5">
+                <div className="text-[10px] uppercase tracking-[0.12em] text-[#A7ABB3]">
                   {metric.label}
                 </div>
-                <div className="font-mono text-3xl md:text-5xl font-bold text-[#25f860]">
-                  <AnimatedCounter value={metric.value} suffix={metric.suffix} />
+                <div className="font-mono text-xl md:text-3xl font-bold text-[#25f860] leading-tight">
+                  {metric.value}
                 </div>
               </div>
             ))}
@@ -699,7 +659,7 @@ export default function FaradayPage() {
               <span className="text-xs text-[#A7ABB3]">Радіотехнічна розвідка</span>
             </div>
             <div className="text-xs text-[#A7ABB3]">
-              © 2024 Faraday Systems. Україна.
+              © 2026 Faraday Systems. Україна.
             </div>
           </div>
         </div>
