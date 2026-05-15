@@ -124,19 +124,12 @@ export default function FaradayPage() {
 
   return (
     <div className="relative min-h-screen bg-[#0A0A0A] text-[#F2F3F5] overflow-x-hidden">
-      <MagneticDots 
-        dotColor="rgba(37, 248, 96, 0.25)" 
-        dotSpacing={20}
-        dotSize={1.5}
-        flowAmplitude={10}
-      />
-      
-      <header className="fixed top-6 left-6 md:w-auto md:right-auto right-6 z-40 border border-[#25f860]/20 backdrop-blur-md bg-[#0A0A0A]/80 rounded-[16px]">
+      <header className="fixed top-6 left-6 md:left-8 lg:left-12 md:w-auto md:right-auto right-6 z-40 border border-[#25f860]/20 backdrop-blur-md bg-[#0A0A0A]/80 rounded-lg">
         <div className="w-full mx-auto px-6">
           <div className="flex items-center gap-6 md:h-14 h-14">
             <button
               onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-              className="text-lg md:text-xl font-semibold font-mono hover:text-[#25f860] transition-colors duration-300 tracking-wider"
+              className="text-lg md:text-xl font-bold hover:text-[#25f860] transition-colors duration-300 tracking-tight"
             >
               FARADAY
             </button>
@@ -144,31 +137,31 @@ export default function FaradayPage() {
             <nav className="hidden md:flex items-center gap-8">
               <button
                 onClick={() => scrollToSection("problem")}
-                className="text-sm text-[#A7ABB3] hover:text-[#25f860] transition-colors duration-300"
+                className="text-sm font-medium text-[#A7ABB3] hover:text-[#25f860] transition-colors duration-300"
               >
                 Проблема
               </button>
               <button
                 onClick={() => scrollToSection("product")}
-                className="text-sm text-[#A7ABB3] hover:text-[#25f860] transition-colors duration-300"
+                className="text-sm font-medium text-[#A7ABB3] hover:text-[#25f860] transition-colors duration-300"
               >
                 Продукт
               </button>
               <button
                 onClick={() => scrollToSection("specs")}
-                className="text-sm text-[#A7ABB3] hover:text-[#25f860] transition-colors duration-300"
+                className="text-sm font-medium text-[#A7ABB3] hover:text-[#25f860] transition-colors duration-300"
               >
                 Специфікації
               </button>
               <button
                 onClick={() => scrollToSection("faq")}
-                className="text-sm text-[#A7ABB3] hover:text-[#25f860] transition-colors duration-300"
+                className="text-sm font-medium text-[#A7ABB3] hover:text-[#25f860] transition-colors duration-300"
               >
                 FAQ
               </button>
               <button
                 onClick={() => scrollToSection("contact")}
-                className="text-sm text-[#A7ABB3] hover:text-[#25f860] transition-colors duration-300"
+                className="text-sm font-medium text-[#A7ABB3] hover:text-[#25f860] transition-colors duration-300"
               >
                 {"Зв'язок"}
               </button>
@@ -225,25 +218,32 @@ export default function FaradayPage() {
       {/* Hero Section */}
       <section
         ref={heroRef}
-        className={`relative min-h-screen flex flex-col items-center justify-center px-4 pt-24 pb-16 md:pt-32 md:pb-24 transition-all duration-[1200ms] ease-[cubic-bezier(0.16,1,0.3,1)] overflow-hidden ${isLoaded ? "scale-100 opacity-100" : "scale-[1.03] opacity-0"}`}
+        className={`relative min-h-screen flex flex-col items-center justify-center px-6 md:px-12 lg:px-24 pt-24 pb-16 md:pt-32 md:pb-24 transition-all duration-[1200ms] ease-[cubic-bezier(0.16,1,0.3,1)] overflow-hidden ${isLoaded ? "scale-100 opacity-100" : "scale-[1.03] opacity-0"}`}
       >
+        <MagneticDots 
+          dotColor="rgba(37, 248, 96, 0.2)" 
+          dotSpacing={24}
+          dotSize={1.5}
+          rippleRadius={150}
+          rippleStrength={30}
+        />
         <div className="absolute inset-0 bg-gradient-to-b from-[#25f860]/5 via-transparent to-transparent pointer-events-none" />
 
         <div
-          className="max-w-[1120px] w-full mx-auto relative z-10"
+          className="max-w-5xl w-full mx-auto relative z-10"
           style={{
             transform: `translateY(${scrollY * 0.2}px)`,
           }}
         >
           <div className="text-center mb-8 md:mb-12">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8 text-xs md:text-sm text-[#A7ABB3] border border-[#25f860]/20 bg-[#25f860]/5 stagger-reveal">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-lg mb-8 text-xs md:text-sm text-[#A7ABB3] border border-[#25f860]/20 bg-[#25f860]/5 stagger-reveal">
               <span className="w-1.5 h-1.5 rounded-full bg-[#25f860] animate-pulse" />
               SIGINT / ELINT / COMINT
             </div>
             
-            <h1 className="font-mono text-[44px] leading-[1.1] md:text-[72px] md:leading-[1.05] font-medium mb-6 text-balance">
+            <h1 className="text-[44px] leading-[1.05] md:text-[72px] md:leading-[1.05] font-bold mb-6 text-balance tracking-tight">
               <span
-                className={`block stagger-reveal text-5xl md:text-7xl font-light transition-all duration-500 ${
+                className={`block stagger-reveal transition-all duration-500 ${
                   wordFade ? "opacity-100 blur-0" : "opacity-0 blur-lg"
                 }`}
               >
@@ -252,7 +252,7 @@ export default function FaradayPage() {
                   <AnimatedText key={dynamicWordIndex} text={dynamicWords[dynamicWordIndex]} delay={0} />
                 </span>
               </span>
-              <span className="block stagger-reveal text-5xl md:text-7xl font-light" style={{ animationDelay: "90ms" }}>
+              <span className="block stagger-reveal" style={{ animationDelay: "90ms" }}>
                 в реальному часі
               </span>
             </h1>
@@ -264,10 +264,10 @@ export default function FaradayPage() {
               радіоелектронних засобів противника на передовій.
             </p>
             <div className="stagger-reveal flex flex-col sm:flex-row gap-4 justify-center" style={{ animationDelay: "270ms" }}>
-              <Button className="px-8 py-6 text-base rounded-full bg-[#25f860] text-[#0A0A0A] hover:bg-[#25f860]/90 font-semibold transition-all duration-300">
+              <Button className="px-6 py-3 h-11 text-sm rounded-lg bg-[#25f860] text-[#0A0A0A] hover:bg-[#25f860]/90 font-semibold transition-all duration-300">
                 Замовити демо
               </Button>
-              <Button variant="outline" className="px-8 py-6 text-base rounded-full border-[#25f860]/30 text-[#F2F3F5] hover:bg-[#25f860]/10 hover:border-[#25f860]/50 transition-all duration-300">
+              <Button variant="outline" className="px-6 py-3 h-11 text-sm rounded-lg border-[#25f860]/30 text-[#F2F3F5] hover:bg-[#25f860]/10 hover:border-[#25f860]/50 transition-all duration-300">
                 Технічна документація
               </Button>
             </div>
@@ -275,7 +275,7 @@ export default function FaradayPage() {
 
           {/* Product Image Placeholder */}
           <div className="mt-12 md:mt-20 stagger-reveal" style={{ animationDelay: "360ms" }}>
-            <div className="relative aspect-[16/9] rounded-[24px] overflow-hidden border border-[#25f860]/20 bg-[#0A0A0A]">
+            <div className="relative aspect-[16/9] rounded-xl overflow-hidden border border-[#25f860]/20 bg-[#0A0A0A]">
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="text-center">
                   <div className="w-32 h-32 mx-auto mb-6 rounded-full border-2 border-[#25f860]/30 flex items-center justify-center">
@@ -294,14 +294,14 @@ export default function FaradayPage() {
       </section>
 
       {/* Problem Section */}
-      <section id="problem" className="relative py-20 md:py-32 px-4 animate-on-scroll">
-        <div className="max-w-[1120px] w-full mx-auto">
+      <section id="problem" className="relative py-20 md:py-32 px-6 md:px-12 lg:px-24 animate-on-scroll">
+        <div className="max-w-5xl w-full mx-auto">
           <div className="text-center mb-12 md:mb-16">
             <div className="text-[10px] md:text-xs uppercase tracking-[0.15em] text-[#A7ABB3] mb-6 flex items-center justify-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-[#25f860] animate-pulse" />
               ПРОБЛЕМА
             </div>
-            <h2 className="font-mono text-[32px] leading-[1.15] md:text-[48px] md:leading-[1.1] font-medium mb-6 text-balance">
+            <h2 className="text-[32px] leading-[1.1] md:text-[48px] md:leading-[1.05] font-bold mb-6 text-balance tracking-tight">
               Ворог використовує радіо.{" "}
               <span className="text-[#25f860]">Ми це чуємо.</span>
             </h2>
@@ -329,9 +329,9 @@ export default function FaradayPage() {
                 desc: "Машинне навчання для ідентифікації типів пристроїв та прогнозування активності"
               }
             ].map((item, i) => (
-              <div key={i} className="p-6 md:p-8 border border-[#25f860]/10 rounded-xl hover:border-[#25f860]/30 transition-all duration-300 bg-[#0A0A0A]/50">
+              <div key={i} className="p-6 md:p-8 border border-[#25f860]/10 rounded-xl hover:border-[#25f860]/30 transition-all duration-300 bg-[#121212]">
                 <item.icon className="w-8 h-8 text-[#25f860] mb-4" />
-                <h3 className="text-lg font-medium mb-2">{item.title}</h3>
+                <h3 className="text-lg font-semibold mb-2">{item.title}</h3>
                 <p className="text-sm text-[#A7ABB3] leading-relaxed">{item.desc}</p>
               </div>
             ))}
@@ -340,8 +340,8 @@ export default function FaradayPage() {
       </section>
 
       {/* Metrics Section */}
-      <section className="relative py-16 md:py-24 px-4 border-y border-[#25f860]/10 animate-on-scroll">
-        <div className="max-w-[1120px] w-full mx-auto">
+      <section className="relative py-16 md:py-24 px-6 md:px-12 lg:px-24 border-y border-[#25f860]/10 animate-on-scroll">
+        <div className="max-w-5xl w-full mx-auto">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
             {[
               { label: "ДІАПАЗОН ЧАСТОТ", value: "25", suffix: " МГц — 6 ГГц" },
@@ -353,7 +353,7 @@ export default function FaradayPage() {
                 <div className="text-[10px] md:text-xs uppercase tracking-[0.15em] text-[#A7ABB3] mb-3">
                   {metric.label}
                 </div>
-                <div className="font-mono text-3xl md:text-5xl font-medium text-[#25f860]">
+                <div className="font-mono text-3xl md:text-5xl font-bold text-[#25f860]">
                   <AnimatedCounter value={metric.value} suffix={metric.suffix} />
                 </div>
               </div>
@@ -363,15 +363,15 @@ export default function FaradayPage() {
       </section>
 
       {/* Product Section */}
-      <section id="product" className="relative py-20 md:py-32 px-4 animate-on-scroll">
-        <div className="max-w-[1120px] w-full mx-auto">
+      <section id="product" className="relative py-20 md:py-32 px-6 md:px-12 lg:px-24 animate-on-scroll">
+        <div className="max-w-5xl w-full mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-center">
             <div>
               <div className="text-[10px] md:text-xs uppercase tracking-[0.15em] text-[#A7ABB3] mb-6 flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#25f860] animate-pulse" />
                 ПРОДУКТ
               </div>
-              <h2 className="font-mono text-[32px] leading-[1.15] md:text-[48px] md:leading-[1.1] font-medium mb-6 text-balance">
+              <h2 className="text-[32px] leading-[1.1] md:text-[48px] md:leading-[1.05] font-bold mb-6 text-balance tracking-tight">
                 Повний комплекс{" "}
                 <span className="text-[#25f860]">радіорозвідки</span>
               </h2>
@@ -406,11 +406,11 @@ export default function FaradayPage() {
                       setAutoRotationKey((prev) => prev + 1)
                     }}
                     className={`relative w-full text-left flex gap-4 items-start p-4 transition-all duration-300 rounded-lg overflow-hidden ${
-                      selectedFeature === i ? "border border-[#25f860]/40 bg-[#25f860]/5" : "border border-[#25f860]/10 hover:border-[#25f860]/20"
+                      selectedFeature === i ? "border border-[#25f860]/40 bg-[#25f860]/5" : "border border-[#25f860]/10 hover:border-[#25f860]/20 bg-[#121212]"
                     }`}
                   >
                     <div className="flex-1">
-                      <h3 className="text-base font-medium mb-1">{feature.title}</h3>
+                      <h3 className="text-base font-semibold mb-1">{feature.title}</h3>
                       <p className="text-sm text-[#A7ABB3]">{feature.desc}</p>
                     </div>
                     {selectedFeature === i && (
@@ -424,7 +424,7 @@ export default function FaradayPage() {
             </div>
 
             <div className="hidden md:flex items-center justify-center">
-              <div className="relative w-full aspect-square max-w-[500px] rounded-[24px] border border-[#25f860]/20 bg-[#0A0A0A] overflow-hidden">
+              <div className="relative w-full aspect-square max-w-[500px] rounded-xl border border-[#25f860]/20 bg-[#121212] overflow-hidden">
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="relative">
                     {/* Animated radar effect */}
@@ -451,14 +451,14 @@ export default function FaradayPage() {
       </section>
 
       {/* Specs Section */}
-      <section id="specs" className="relative py-20 md:py-32 px-4 animate-on-scroll bg-[#050505]">
-        <div className="max-w-[1120px] w-full mx-auto">
+      <section id="specs" className="relative py-20 md:py-32 px-6 md:px-12 lg:px-24 animate-on-scroll bg-[#050505]">
+        <div className="max-w-5xl w-full mx-auto">
           <div className="text-center mb-12 md:mb-16">
             <div className="text-[10px] md:text-xs uppercase tracking-[0.15em] text-[#A7ABB3] mb-6 flex items-center justify-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-[#25f860] animate-pulse" />
               ТЕХНІЧНІ ХАРАКТЕРИСТИКИ
             </div>
-            <h2 className="font-mono text-[32px] leading-[1.15] md:text-[48px] md:leading-[1.1] font-medium mb-6 text-balance">
+            <h2 className="text-[32px] leading-[1.1] md:text-[48px] md:leading-[1.05] font-bold mb-6 text-balance tracking-tight">
               Побудовано для{" "}
               <span className="text-[#25f860]">бойових умов</span>
             </h2>
@@ -479,7 +479,7 @@ export default function FaradayPage() {
             ].map((spec, i) => (
               <div key={i} className="flex justify-between items-center p-4 border-b border-[#25f860]/10">
                 <span className="text-[#A7ABB3] text-sm">{spec.label}</span>
-                <span className="font-mono text-[#25f860]">{spec.value}</span>
+                <span className="font-mono font-semibold text-[#25f860]">{spec.value}</span>
               </div>
             ))}
           </div>
@@ -487,14 +487,14 @@ export default function FaradayPage() {
       </section>
 
       {/* Platforms Section */}
-      <section className="relative py-20 md:py-32 px-4 animate-on-scroll">
-        <div className="max-w-[1120px] w-full mx-auto">
+      <section className="relative py-20 md:py-32 px-6 md:px-12 lg:px-24 animate-on-scroll">
+        <div className="max-w-5xl w-full mx-auto">
           <div className="text-center mb-12 md:mb-16">
             <div className="text-[10px] md:text-xs uppercase tracking-[0.15em] text-[#A7ABB3] mb-6 flex items-center justify-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-[#25f860] animate-pulse" />
               ПЛАТФОРМИ
             </div>
-            <h2 className="font-mono text-[32px] leading-[1.15] md:text-[48px] md:leading-[1.1] font-medium mb-6 text-balance">
+            <h2 className="text-[32px] leading-[1.1] md:text-[48px] md:leading-[1.05] font-bold mb-6 text-balance tracking-tight">
               Адаптовано під{" "}
               <span className="text-[#25f860]">будь-яку задачу</span>
             </h2>
@@ -518,12 +518,12 @@ export default function FaradayPage() {
                 features: ["50+ км", "Мережева синхронізація", "24/7 робота"]
               }
             ].map((platform, i) => (
-              <div key={i} className="p-6 md:p-8 border border-[#25f860]/10 rounded-xl hover:border-[#25f860]/30 transition-all duration-300 bg-[#0A0A0A]/50">
-                <h3 className="text-xl font-medium mb-3">{platform.title}</h3>
+              <div key={i} className="p-6 md:p-8 border border-[#25f860]/10 rounded-xl hover:border-[#25f860]/30 transition-all duration-300 bg-[#121212]">
+                <h3 className="text-xl font-semibold mb-3">{platform.title}</h3>
                 <p className="text-sm text-[#A7ABB3] leading-relaxed mb-4">{platform.desc}</p>
                 <div className="flex flex-wrap gap-2">
                   {platform.features.map((f, j) => (
-                    <span key={j} className="px-3 py-1 text-xs font-mono bg-[#25f860]/10 text-[#25f860] rounded-full">
+                    <span key={j} className="px-3 py-1 text-xs font-mono bg-[#25f860]/10 text-[#25f860] rounded-lg">
                       {f}
                     </span>
                   ))}
@@ -535,14 +535,14 @@ export default function FaradayPage() {
       </section>
 
       {/* FAQ Section */}
-      <section id="faq" className="relative py-20 md:py-32 px-4 animate-on-scroll">
-        <div className="max-w-[800px] w-full mx-auto">
+      <section id="faq" className="relative py-20 md:py-32 px-6 md:px-12 lg:px-24 animate-on-scroll">
+        <div className="max-w-3xl w-full mx-auto">
           <div className="text-center mb-12 md:mb-16">
             <div className="text-[10px] md:text-xs uppercase tracking-[0.15em] text-[#A7ABB3] mb-6 flex items-center justify-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-[#25f860] animate-pulse" />
               ПИТАННЯ ТА ВІДПОВІДІ
             </div>
-            <h2 className="font-mono text-[32px] leading-[1.15] md:text-[48px] md:leading-[1.1] font-medium mb-6 text-balance">
+            <h2 className="text-[32px] leading-[1.1] md:text-[48px] md:leading-[1.05] font-bold mb-6 text-balance tracking-tight">
               Часті{" "}
               <span className="text-[#25f860]">питання</span>
             </h2>
@@ -573,13 +573,13 @@ export default function FaradayPage() {
             ].map((faq, i) => (
               <div
                 key={i}
-                className="border border-[#25f860]/10 rounded-xl overflow-hidden transition-all duration-300 hover:border-[#25f860]/20"
+                className="border border-[#25f860]/10 rounded-xl overflow-hidden transition-all duration-300 hover:border-[#25f860]/20 bg-[#121212]"
               >
                 <button
                   onClick={() => setOpenFaqIndex(openFaqIndex === i ? null : i)}
                   className="w-full flex items-center justify-between p-6 text-left"
                 >
-                  <span className="text-base md:text-lg font-medium pr-4">{faq.question}</span>
+                  <span className="text-base md:text-lg font-semibold pr-4">{faq.question}</span>
                   <ChevronDown
                     className={`w-5 h-5 flex-shrink-0 text-[#25f860] transition-transform duration-300 ${
                       openFaqIndex === i ? "rotate-180" : ""
@@ -600,15 +600,15 @@ export default function FaradayPage() {
       </section>
 
       {/* Contact Section */}
-      <section id="contact" className="relative py-20 md:py-32 px-4 animate-on-scroll bg-[#050505]">
-        <div className="max-w-[1120px] w-full mx-auto">
+      <section id="contact" className="relative py-20 md:py-32 px-6 md:px-12 lg:px-24 animate-on-scroll bg-[#050505]">
+        <div className="max-w-5xl w-full mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16">
             <div>
               <div className="text-[10px] md:text-xs uppercase tracking-[0.15em] text-[#A7ABB3] mb-6 flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#25f860] animate-pulse" />
                 {"ЗВ'ЯЗАТИСЯ З НАМИ"}
               </div>
-              <h2 className="font-mono text-[32px] leading-[1.15] md:text-[48px] md:leading-[1.1] font-medium mb-6 text-balance">
+              <h2 className="text-[32px] leading-[1.1] md:text-[48px] md:leading-[1.05] font-bold mb-6 text-balance tracking-tight">
                 Готові до{" "}
                 <span className="text-[#25f860]">співпраці</span>
               </h2>
@@ -618,36 +618,36 @@ export default function FaradayPage() {
 
               <div className="space-y-4">
                 <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-full bg-[#25f860]/10 flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-lg bg-[#25f860]/10 flex items-center justify-center">
                     <Mail className="w-5 h-5 text-[#25f860]" />
                   </div>
                   <div>
                     <div className="text-xs text-[#A7ABB3]">Email</div>
-                    <div className="font-mono">contact@faraday.ua</div>
+                    <div className="font-medium">contact@faraday.ua</div>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-full bg-[#25f860]/10 flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-lg bg-[#25f860]/10 flex items-center justify-center">
                     <Phone className="w-5 h-5 text-[#25f860]" />
                   </div>
                   <div>
                     <div className="text-xs text-[#A7ABB3]">Телефон</div>
-                    <div className="font-mono">+380 XX XXX XX XX</div>
+                    <div className="font-medium">+380 XX XXX XX XX</div>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-full bg-[#25f860]/10 flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-lg bg-[#25f860]/10 flex items-center justify-center">
                     <MapPin className="w-5 h-5 text-[#25f860]" />
                   </div>
                   <div>
                     <div className="text-xs text-[#A7ABB3]">Локація</div>
-                    <div className="font-mono">Україна</div>
+                    <div className="font-medium">Україна</div>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="p-6 md:p-8 border border-[#25f860]/10 rounded-xl bg-[#0A0A0A]/50">
+            <div className="p-6 md:p-8 border border-[#25f860]/10 rounded-xl bg-[#121212]">
               <form className="space-y-6">
                 <div>
                   <label className="block text-xs text-[#A7ABB3] mb-2">{"Ім'я та прізвище"}</label>
@@ -681,7 +681,7 @@ export default function FaradayPage() {
                     placeholder="Опишіть вашу задачу або питання..."
                   />
                 </div>
-                <Button className="w-full px-8 py-4 text-base rounded-lg bg-[#25f860] text-[#0A0A0A] hover:bg-[#25f860]/90 font-semibold transition-all duration-300">
+                <Button className="w-full px-6 py-3 h-11 text-sm rounded-lg bg-[#25f860] text-[#0A0A0A] hover:bg-[#25f860]/90 font-semibold transition-all duration-300">
                   Надіслати запит
                 </Button>
               </form>
@@ -691,11 +691,11 @@ export default function FaradayPage() {
       </section>
 
       {/* Footer */}
-      <footer className="relative px-4 border-t border-[#25f860]/10 py-8">
-        <div className="max-w-[1120px] w-full mx-auto">
+      <footer className="relative px-6 md:px-12 lg:px-24 border-t border-[#25f860]/10 py-8">
+        <div className="max-w-5xl w-full mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-center gap-6">
             <div className="flex items-center gap-4">
-              <span className="text-lg font-semibold font-mono">FARADAY</span>
+              <span className="text-lg font-bold tracking-tight">FARADAY</span>
               <span className="text-xs text-[#A7ABB3]">Радіотехнічна розвідка</span>
             </div>
             <div className="text-xs text-[#A7ABB3]">

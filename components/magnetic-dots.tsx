@@ -9,97 +9,67 @@ interface Dot {
   baseY: number
   vx: number
   vy: number
-  flowOffset: number
-}
-
-interface Ripple {
-  x: number
-  y: number
-  startTime: number
-  duration: number
 }
 
 interface MagneticDotsProps {
   dotSize?: number
   dotSpacing?: number
-  attractionRadius?: number
-  attractionStrength?: number
+  rippleRadius?: number
+  rippleStrength?: number
   springStrength?: number
   damping?: number
   dotColor?: string
   className?: string
-  flowAngle?: number
-  flowSpeed?: number
-  flowAmplitude?: number
-  rippleSpeed?: number
-  rippleStrength?: number
-  rippleDuration?: number
 }
 
 export function MagneticDots({
-  dotSize = 2,
-  dotSpacing = 15,
-  attractionRadius = 1000,
-  attractionStrength = 300,
-  springStrength = 0.003,
-  damping = 0.96,
-  dotColor = "rgba(37, 248, 96, 0.3)",
+  dotSize = 1.5,
+  dotSpacing = 20,
+  rippleRadius = 120,
+  rippleStrength = 25,
+  springStrength = 0.08,
+  damping = 0.85,
+  dotColor = "rgba(37, 248, 96, 0.25)",
   className = "",
-  flowAngle = 25,
-  flowSpeed = 0.02,
-  flowAmplitude = 15,
-  rippleSpeed = 600,
-  rippleStrength = 80,
-  rippleDuration = 1500,
 }: MagneticDotsProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
   const dotsRef = useRef<Dot[]>([])
   const mouseRef = useRef({ x: -1000, y: -1000 })
   const animationFrameRef = useRef<number>()
-  const timeRef = useRef<number>(0)
-  const ripplesRef = useRef<Ripple[]>([])
 
   useEffect(() => {
     const canvas = canvasRef.current
-    if (!canvas) return
+    const container = containerRef.current
+    if (!canvas || !container) return
 
     const ctx = canvas.getContext("2d")
     if (!ctx) return
 
     const resizeCanvas = () => {
-      canvas.width = window.innerWidth
-      canvas.height = window.innerHeight
+      const rect = container.getBoundingClientRect()
+      canvas.width = rect.width
+      canvas.height = rect.height
       initializeDots()
     }
 
     const initializeDots = () => {
       const dots: Dot[] = []
-      const angleRad = (flowAngle * Math.PI) / 180
-
-      const cols = Math.ceil((canvas.width + canvas.height * Math.abs(Math.tan(angleRad))) / dotSpacing) + 2
-      const rows = Math.ceil((canvas.height + canvas.width * Math.abs(Math.tan(angleRad))) / dotSpacing) + 2
+      const cols = Math.ceil(canvas.width / dotSpacing) + 1
+      const rows = Math.ceil(canvas.height / dotSpacing) + 1
 
       for (let i = 0; i < cols; i++) {
         for (let j = 0; j < rows; j++) {
-          const x = i * dotSpacing - j * dotSpacing * Math.sin(angleRad)
+          const x = i * dotSpacing
           const y = j * dotSpacing
-
-          if (
-            x > -dotSpacing * 2 &&
-            x < canvas.width + dotSpacing * 2 &&
-            y > -dotSpacing * 2 &&
-            y < canvas.height + dotSpacing * 2
-          ) {
-            dots.push({
-              x,
-              y,
-              baseX: x,
-              baseY: y,
-              vx: 0,
-              vy: 0,
-              flowOffset: (i + j) * 0.5,
-            })
-          }
+          dots.push({
+            x,
+            y,
+            baseX: x,
+            baseY: y,
+            vx: 0,
+            vy: 0,
+          })
         }
       }
 
@@ -107,90 +77,57 @@ export function MagneticDots({
     }
 
     const handleMouseMove = (e: MouseEvent) => {
-      mouseRef.current = { x: e.clientX, y: e.clientY }
+      const rect = canvas.getBoundingClientRect()
+      mouseRef.current = { 
+        x: e.clientX - rect.left, 
+        y: e.clientY - rect.top 
+      }
     }
 
     const handleMouseLeave = () => {
       mouseRef.current = { x: -1000, y: -1000 }
     }
 
-    const handleClick = (e: MouseEvent) => {
-      ripplesRef.current.push({
-        x: e.clientX,
-        y: e.clientY,
-        startTime: Date.now(),
-        duration: rippleDuration,
-      })
-    }
-
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height)
-
-      timeRef.current += flowSpeed
-      const currentTime = Date.now()
-
-      ripplesRef.current = ripplesRef.current.filter((ripple) => currentTime - ripple.startTime < ripple.duration)
 
       const mouseX = mouseRef.current.x
       const mouseY = mouseRef.current.y
 
       dotsRef.current.forEach((dot) => {
-        const flowX = Math.sin(timeRef.current + dot.flowOffset) * flowAmplitude
-        const flowY = Math.cos(timeRef.current + dot.flowOffset * 0.7) * (flowAmplitude * 0.5)
-        const targetBaseX = dot.baseX + flowX
-        const targetBaseY = dot.baseY + flowY
-
+        // Calculate distance from mouse
         const dx = mouseX - dot.x
         const dy = mouseY - dot.y
         const distance = Math.sqrt(dx * dx + dy * dy)
 
-        if (distance < attractionRadius && distance > 0) {
-          const normalizedDistance = distance / attractionRadius
-          const force = (1 - normalizedDistance) * attractionStrength
-
-          const forceX = (dx / distance) * force * 2.0
-          const forceY = (dy / distance) * force * 2.0
-
-          dot.vx += forceX
-          dot.vy += forceY
+        // Ripple effect - push dots away from cursor
+        if (distance < rippleRadius && distance > 0) {
+          const normalizedDistance = distance / rippleRadius
+          const force = (1 - normalizedDistance) * rippleStrength
+          
+          // Push away from cursor
+          const pushX = -(dx / distance) * force
+          const pushY = -(dy / distance) * force
+          
+          dot.vx += pushX * 0.1
+          dot.vy += pushY * 0.1
         }
 
-        ripplesRef.current.forEach((ripple) => {
-          const elapsed = currentTime - ripple.startTime
-          const progress = elapsed / ripple.duration
-
-          const rdx = dot.x - ripple.x
-          const rdy = dot.y - ripple.y
-          const rippleDistance = Math.sqrt(rdx * rdx + rdy * rdy)
-
-          const rippleRadius = progress * rippleSpeed
-
-          const distanceFromWave = Math.abs(rippleDistance - rippleRadius)
-          const waveWidth = 100
-
-          if (distanceFromWave < waveWidth) {
-            const waveStrength = Math.cos((distanceFromWave / waveWidth) * Math.PI) * 0.5 + 0.5
-            const fadeFactor = 1 - progress
-            const totalStrength = waveStrength * fadeFactor * rippleStrength
-
-            if (rippleDistance > 0) {
-              dot.vx += (rdx / rippleDistance) * totalStrength
-              dot.vy += (rdy / rippleDistance) * totalStrength
-            }
-          }
-        })
-
-        const springDx = targetBaseX - dot.x
-        const springDy = targetBaseY - dot.y
+        // Spring back to base position
+        const springDx = dot.baseX - dot.x
+        const springDy = dot.baseY - dot.y
         dot.vx += springDx * springStrength
         dot.vy += springDy * springStrength
 
+        // Apply damping
         dot.vx *= damping
         dot.vy *= damping
 
+        // Update position
         dot.x += dot.vx
         dot.y += dot.vy
 
+        // Draw dot
         ctx.fillStyle = dotColor
         ctx.beginPath()
         ctx.arc(dot.x, dot.y, dotSize, 0, Math.PI * 2)
@@ -202,35 +139,23 @@ export function MagneticDots({
 
     resizeCanvas()
     window.addEventListener("resize", resizeCanvas)
-    window.addEventListener("mousemove", handleMouseMove)
-    window.addEventListener("mouseleave", handleMouseLeave)
-    window.addEventListener("click", handleClick)
+    container.addEventListener("mousemove", handleMouseMove)
+    container.addEventListener("mouseleave", handleMouseLeave)
     animate()
 
     return () => {
       window.removeEventListener("resize", resizeCanvas)
-      window.removeEventListener("mousemove", handleMouseMove)
-      window.removeEventListener("mouseleave", handleMouseLeave)
-      window.removeEventListener("click", handleClick)
+      container.removeEventListener("mousemove", handleMouseMove)
+      container.removeEventListener("mouseleave", handleMouseLeave)
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current)
       }
     }
-  }, [
-    dotSize,
-    dotSpacing,
-    attractionRadius,
-    attractionStrength,
-    springStrength,
-    damping,
-    dotColor,
-    flowAngle,
-    flowSpeed,
-    flowAmplitude,
-    rippleSpeed,
-    rippleStrength,
-    rippleDuration,
-  ])
+  }, [dotSize, dotSpacing, rippleRadius, rippleStrength, springStrength, damping, dotColor])
 
-  return <canvas ref={canvasRef} className={`fixed inset-0 ${className}`} style={{ pointerEvents: "none" }} />
+  return (
+    <div ref={containerRef} className={`absolute inset-0 ${className}`}>
+      <canvas ref={canvasRef} className="w-full h-full" style={{ pointerEvents: "none" }} />
+    </div>
+  )
 }
