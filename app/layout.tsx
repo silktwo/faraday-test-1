@@ -9,7 +9,7 @@ const jetbrainsMono = JetBrains_Mono({ subsets: ["latin", "cyrillic"], variable:
 export const metadata: Metadata = {
   title: 'Faraday Test 1',
   description: 'Created with v0',
-  generator: 'v0.app',
+  generator: 'Faraday v1',
   icons: {
     icon: [
       {
