@@ -7,7 +7,7 @@ const inter = Inter({ subsets: ["latin", "cyrillic"], variable: "--font-inter" }
 const jetbrainsMono = JetBrains_Mono({ subsets: ["latin", "cyrillic"], variable: "--font-mono" });
 
 export const metadata: Metadata = {
-  title: 'v0 App',
+  title: 'Faraday Test 1',
   description: 'Created with v0',
   generator: 'v0.app',
   icons: {
