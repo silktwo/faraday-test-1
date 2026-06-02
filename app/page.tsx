@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import { useEffect, useRef, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Menu, X, Radio, Wifi, Activity, ChevronDown, Mail, Phone, MapPin } from "lucide-react"
@@ -85,14 +86,21 @@ export default function FaradayPage() {
   return (
     <div className="relative min-h-screen bg-[#0A0A0A] text-[#F2F3F5] overflow-x-hidden">
       {/* Desktop header */}
-      <header className="fixed top-6 left-6 right-6 md:left-8 md:right-auto lg:left-12 z-40 flex items-center justify-between md:justify-start">
+      <header className="fixed top-4 left-6 right-6 md:left-8 md:right-auto lg:left-12 z-40 flex items-center justify-between md:justify-start">
         {/* Logo + nav pill */}
-        <div className="flex items-center gap-0 border border-[#25f860]/20 backdrop-blur-md bg-[#0A0A0A]/80 rounded-lg h-12 px-5">
+        <div className="flex items-center gap-0 border border-[#25f860]/20 backdrop-blur-md bg-[#0A0A0A]/80 rounded-lg h-11 px-4 py-5">
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className="text-base font-bold hover:text-[#25f860] transition-colors duration-300 tracking-tight pr-6 border-r border-[#25f860]/15"
+            className="flex items-center gap-0 hover:opacity-70 transition-opacity duration-300 pr-5 border-r border-[#25f860]/15"
           >
-            FARADAY
+            <Image
+              src="/logo.svg"
+              alt="Faraday"
+              width={80}
+              height={20}
+              className="h-[24px] w-auto"
+              priority
+            />
           </button>
           <nav className="hidden md:flex items-center gap-6 pl-6">
             {[
@@ -247,7 +255,7 @@ export default function FaradayPage() {
               {
                 icon: Radio,
                 title: "Виявлення джерел",
-                desc: "Автоматичне виявлення та класифікація радіовипромінювань у діапазоні 25 МГц — 6 ГГц"
+                desc: "Автоматичне виявлення та класифікація радіови��ромінювань у діапазоні 25 МГц — 6 ГГц"
               },
               {
                 icon: Wifi,
@@ -318,7 +326,7 @@ export default function FaradayPage() {
                     desc: "Компактний SDR-приймач з антенною системою для 360° охоплення",
                   },
                   {
-                    title: "Польовий планшет",
+                    title: "П����ьови�� планшет",
                     desc: "Захищений планшет з інтуїтивним інтерфейсом для операторів",
                   },
                   {
@@ -625,8 +633,14 @@ export default function FaradayPage() {
       <footer className="relative px-6 md:px-12 lg:px-24 border-t border-[#25f860]/10 py-8">
         <div className="max-w-5xl w-full mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-            <div className="flex items-center gap-4">
-              <span className="text-lg font-bold tracking-tight">FARADAY</span>
+            <div className="flex items-center gap-3">
+              <Image
+                src="/logo.svg"
+                alt="Faraday"
+                width={80}
+                height={20}
+                className="h-5 w-auto"
+              />
               <span className="text-xs text-[#A7ABB3]">Радіотехнічна розвідка</span>
             </div>
             <div className="text-xs text-[#A7ABB3]">
