@@ -98,7 +98,7 @@ export default function FaradayPage() {
               alt="Faraday"
               width={80}
               height={20}
-              className="h-[18px] w-auto"
+              className="h-[24px] w-auto"
               priority
             />
           </button>
