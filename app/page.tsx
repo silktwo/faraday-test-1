@@ -96,9 +96,9 @@ export default function FaradayPage() {
             <Image
               src="/logo.svg"
               alt="Faraday"
-              width={28}
-              height={9}
-              className="w-auto"
+              width={80}
+              height={20}
+              className="h-[18px] w-auto"
               priority
             />
           </button>
@@ -326,7 +326,7 @@ export default function FaradayPage() {
                     desc: "Компактний SDR-приймач з антенною системою для 360° охоплення",
                   },
                   {
-                    title: "П��льовий планшет",
+                    title: "П��льови�� планшет",
                     desc: "Захищений планшет з інтуїтивним інтерфейсом для операторів",
                   },
                   {
