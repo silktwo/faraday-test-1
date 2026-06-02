@@ -96,8 +96,8 @@ export default function FaradayPage() {
             <Image
               src="/logo.svg"
               alt="Faraday"
-              width={60}
-              height={18}
+              width={44}
+              height={14}
               className="w-auto"
               priority
             />
