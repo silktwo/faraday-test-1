@@ -88,7 +88,7 @@ export default function FaradayPage() {
       {/* Desktop header */}
       <header className="fixed top-6 left-6 right-6 md:left-8 md:right-auto lg:left-12 z-40 flex items-center justify-between md:justify-start">
         {/* Logo + nav pill */}
-        <div className="flex items-center gap-0 border border-[#25f860]/20 backdrop-blur-md bg-[#0A0A0A]/80 rounded-lg h-11 px-4">
+        <div className="flex items-center gap-0 border border-[#25f860]/20 backdrop-blur-md bg-[#0A0A0A]/80 rounded-lg h-11 px-4 py-2.5">
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             className="flex items-center gap-0 hover:opacity-70 transition-opacity duration-300 pr-5 border-r border-[#25f860]/15"
@@ -255,7 +255,7 @@ export default function FaradayPage() {
               {
                 icon: Radio,
                 title: "Виявлення джерел",
-                desc: "Автоматичне виявлення та класифікація радіовипромінювань у діапазоні 25 МГц — 6 ГГц"
+                desc: "Автоматичне виявлення та класифікація радіови��ромінювань у діапазоні 25 МГц — 6 ГГц"
               },
               {
                 icon: Wifi,
@@ -326,7 +326,7 @@ export default function FaradayPage() {
                     desc: "Компактний SDR-приймач з антенною системою для 360° охоплення",
                   },
                   {
-                    title: "П��льови�� планшет",
+                    title: "П����ьови�� планшет",
                     desc: "Захищений планшет з інтуїтивним інтерфейсом для операторів",
                   },
                   {
