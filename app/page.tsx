@@ -88,17 +88,17 @@ export default function FaradayPage() {
       {/* Desktop header */}
       <header className="fixed top-6 left-6 right-6 md:left-8 md:right-auto lg:left-12 z-40 flex items-center justify-between md:justify-start">
         {/* Logo + nav pill */}
-        <div className="flex items-center gap-0 border border-[#25f860]/20 backdrop-blur-md bg-[#0A0A0A]/80 rounded-lg h-12 px-4">
+        <div className="flex items-center gap-0 border border-[#25f860]/20 backdrop-blur-md bg-[#0A0A0A]/80 rounded-lg h-11 px-4">
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className="flex items-center gap-0 hover:opacity-80 transition-opacity duration-300 pr-5 border-r border-[#25f860]/15 h-full"
+            className="flex items-center gap-0 hover:opacity-70 transition-opacity duration-300 pr-5 border-r border-[#25f860]/15"
           >
             <Image
               src="/logo.svg"
               alt="Faraday"
-              width={100}
-              height={32}
-              className="h-full w-auto"
+              width={60}
+              height={18}
+              className="w-auto"
               priority
             />
           </button>
@@ -326,7 +326,7 @@ export default function FaradayPage() {
                     desc: "Компактний SDR-приймач з антенною системою для 360° охоплення",
                   },
                   {
-                    title: "Польовий планшет",
+                    title: "П��льовий планшет",
                     desc: "Захищений планшет з інтуїтивним інтерфейсом для операторів",
                   },
                   {
