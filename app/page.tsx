@@ -44,8 +44,8 @@ const copy = {
     airTitle: "FARADAY 16KRXSDR",
     airText:
       "16-канальна SDR-платформа для повітряної розвідки та систем CRPA.",
-    preliminary: "Попередні характеристики",
-    subjectToChange: "Попередні",
+    preliminary: "Технічні характеристики",
+    subjectToChange: "Може бути змінено",
     notifyLaunch: "Повідомити мене про запуск",
     specs: [
       ["Кількість каналів", "16 когерентних"],
@@ -134,7 +134,7 @@ const copy = {
     send: "Надіслати",
     qr: "QR WhatsApp",
     emailQr: "QR email",
-    contactNext: "QR WhatsApp · email · Давайте обговоримо наступний крок",
+    contactNext: "Давайте обговоримо наступний крок",
     footerLine: "Технологія готова. Команда готова. Фронт чекає.",
     sent: "Заявку отримано. Ми зв'яжемося з вами після перевірки.",
     error:
@@ -174,8 +174,8 @@ const copy = {
     airTitle: "FARADAY 16KRXSDR",
     airText:
       "16-channel SDR platform for airborne intelligence and CRPA antenna systems.",
-    preliminary: "Preliminary specs",
-    subjectToChange: "Preliminary / subject to change",
+    preliminary: "Tech specs",
+    subjectToChange: "subject to change",
     notifyLaunch: "Notify me at launch",
     specs: [
       ["Number of Channels", "16 coherent"],
@@ -261,7 +261,7 @@ const copy = {
     send: "Send",
     qr: "WhatsApp QR",
     emailQr: "email QR",
-    contactNext: "WhatsApp QR · email · Let's discuss next steps",
+    contactNext: "Let's discuss next steps",
     footerLine:
       "The technology is ready. The team is ready. The front is waiting.",
     sent: "Request received. We will contact you after review.",
@@ -603,7 +603,7 @@ export default function FaradayPage() {
         id="products"
         className="relative min-h-screen px-5 py-12 md:px-12 md:py-14 lg:px-24 animate-on-scroll"
       >
-        <div className="mx-auto flex min-h-[calc(100vh-6rem)] w-full max-w-6xl flex-col justify-start gap-10 pt-16 md:pt-20">
+        <div className="mx-auto flex min-h-[calc(100vh-6rem)] w-full max-w-6xl flex-col justify-start gap-10 pt-8 md:pt-10 lg:pt-12">
           <div className="mx-auto max-w-5xl text-center">
             <h2 className="text-[30px] font-bold leading-[1.05] tracking-tight md:text-[52px] lg:text-[58px]">
               {t.productsTitle}
