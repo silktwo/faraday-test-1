@@ -546,10 +546,10 @@ export default function FaradayPage() {
       {/* Desktop header */}
       <header className="fixed top-4 left-6 right-6 md:left-8 md:right-8 lg:left-12 lg:right-12 z-40 flex items-center justify-between">
         {/* Logo + nav pill */}
-        <div className="flex min-h-16 items-center gap-0 rounded-xl bg-[#0A0A0A]/80 px-5 py-4 backdrop-blur-md md:h-11 md:min-h-0 md:rounded-lg md:border md:border-[#25f860]/20 md:px-4 md:py-5">
+        <div className="flex min-h-16 items-center gap-0 rounded-xl bg-[#0A0A0A]/80 px-5 py-4 backdrop-blur-md md:h-11 md:min-h-0 md:rounded-lg md:px-4 md:py-5">
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className={`flex items-center gap-0 hover:opacity-70 md:border-r md:border-[#25f860]/15 md:pr-5 ${quietAction}`}
+            className={`flex items-center gap-0 hover:opacity-70 md:pr-5 ${quietAction}`}
           >
             <Image
               src="/logo.svg"
@@ -577,13 +577,13 @@ export default function FaradayPage() {
           </nav>
         </div>
 
-        <div className="hidden md:flex items-center gap-2">
-          <div className="flex h-11 items-center rounded-lg border border-[#25f860]/20 bg-[#0A0A0A]/80 p-1 backdrop-blur-md">
+        <div className="hidden md:flex items-center gap-4">
+          <div className="flex h-10 items-center rounded-lg border border-[#25f860]/20 bg-[#0A0A0A]/80 p-1 backdrop-blur-md">
             {(["ua", "en"] as Language[]).map((item) => (
               <button
                 key={item}
                 onClick={() => setLanguage(item)}
-                className={`h-8 rounded-md px-3 text-xs font-semibold ${quietAction} ${
+                className={`h-7 rounded-md px-2.5 text-xs font-semibold ${quietAction} ${
                   language === item
                     ? "bg-[#25f860] text-[#0A0A0A]"
                     : "text-[#A7ABB3] hover:text-[#F2F3F5]"
