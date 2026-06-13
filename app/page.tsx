@@ -3,22 +3,25 @@
 import Image from "next/image";
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, ChevronDown, Menu, Radio, X } from "lucide-react";
+import { ArrowRight, ChevronDown, Menu, X } from "lucide-react";
 import { AnimatedText } from "@/components/animated-text";
-import { MagneticDots } from "@/components/magnetic-dots";
+import TargetScanner from "@/app/target-scanner";
 
 type Language = "ua" | "en";
 
 const copy = {
   ua: {
     nav: [
-      { id: "ground", label: "Наземна пеленгація" },
-      { id: "air", label: "Повітряна пеленгація" },
+      { id: "products", label: "Продукти" },
       { id: "team", label: "Команда" },
-      { id: "technology", label: "Технології" },
+      { id: "contact", label: "Записатися на демо" },
     ],
+    heroPrefix: "Виявляй",
+    heroSuffix: "в реальному часі",
+    heroWords: ["сигнали", "загрози", "ворога", "рухи", "частоти"],
     preorder: "Передзамовити",
     demo: "Записатися на демо",
+    productsHeading: "Продукти",
     productsTitle: "Екосистема продуктів для радіорозвідки, зроблена в Україні",
     productsText: "",
     products: [
@@ -132,23 +135,28 @@ const copy = {
     contact: "Контакт (Signal / WhatsApp / Email)",
     interest: "Що цікавить",
     send: "Надіслати",
-    qr: "QR WhatsApp",
-    emailQr: "QR email",
     contactNext: "Давайте обговоримо наступний крок",
     footerLine: "Технологія готова. Команда готова. Фронт чекає.",
+    footerProductsTitle: "Продукти",
+    footerContactsTitle: "Контакти",
+    footerProducts: ["FARADAY SDR", "Radio Direction Finder", "BRAVE AERO ELINT"],
+    footerContacts: ["WhatsApp", "hello@faraday.tel"],
     sent: "Заявку отримано. Ми зв'яжемося з вами після перевірки.",
     error:
       "Не вдалося відправити заявку. Спробуйте ще раз або напишіть на email.",
   },
   en: {
     nav: [
-      { id: "ground", label: "Ground DF" },
-      { id: "air", label: "Airborne DF" },
+      { id: "products", label: "Products" },
       { id: "team", label: "Team" },
-      { id: "technology", label: "Technology" },
+      { id: "contact", label: "Book a demo" },
     ],
+    heroPrefix: "Detect",
+    heroSuffix: "in real time",
+    heroWords: ["signals", "threats", "enemy activity", "movement", "frequencies"],
     preorder: "Pre-order",
     demo: "Book a demo",
+    productsHeading: "Products",
     productsTitle: "A radio intelligence ecosystem made in Ukraine",
     productsText: "",
     products: [
@@ -259,11 +267,13 @@ const copy = {
     contact: "Contact (Signal / WhatsApp / Email)",
     interest: "Interest",
     send: "Send",
-    qr: "WhatsApp QR",
-    emailQr: "email QR",
     contactNext: "Let's discuss next steps",
     footerLine:
       "The technology is ready. The team is ready. The front is waiting.",
+    footerProductsTitle: "Products",
+    footerContactsTitle: "Contacts",
+    footerProducts: ["FARADAY SDR", "Radio Direction Finder", "BRAVE AERO ELINT"],
+    footerContacts: ["WhatsApp", "hello@faraday.tel"],
     sent: "Request received. We will contact you after review.",
     error: "Could not send the request. Please try again or email us directly.",
   },
@@ -280,6 +290,109 @@ const productImages = [
   "/UAV-ELINT-Faraday-16K.webp",
 ];
 
+const partnerLogos = [
+  { src: "/logo-partner/Brave1-logo.webp", alt: "Brave1", className: "max-h-7 md:max-h-11" },
+  { src: "/logo-partner/Lasars-group-logo.webp", alt: "Lasars Group", className: "max-h-7 md:max-h-11" },
+  { src: "/logo-partner/avision_logo.webp", alt: "Avision", className: "max-h-5 md:max-h-8" },
+  { src: "/logo-partner/deviro_logo.svg", alt: "Deviro", className: "max-h-7 md:max-h-11" },
+  { src: "/logo-partner/zuok-logo.svg", alt: "ZUOK", className: "max-h-8 md:max-h-12" },
+];
+
+const productDetails = {
+  ua: [
+    {
+      summary: "FARADAY SDR — основа для різноманітних ELINT засобів.",
+      benefits: [
+        "Платформа для побудови SDR-станцій",
+        "Підходить для задач радіорозвідки",
+        "Може бути частиною ширшої екосистеми FARADAY",
+      ],
+      specs: [
+        ["Статус", "Доступно зараз"],
+        ["Платформа", "4K SDR"],
+        ["Datasheet", "Буде додано після фіналізації ТТХ"],
+      ],
+    },
+    {
+      summary:
+        "Наземний комплекс пеленгації, який передає тактичні параметри у Signal Source Table.",
+      benefits: [
+        "Алгоритм MUSIC для роботи в реальних польових умовах",
+        "Підтримка 2+ одночасних джерел у вікні",
+        "Інтеграція через стандартний мережевий стек",
+      ],
+      specs: [
+        ["Точність пеленгації", "8°"],
+        ["Оновлення вихідних даних", "10 Hz"],
+        ["Інтерфейс передачі", "1GbE"],
+      ],
+    },
+    {
+      summary:
+        "FARADAY 16KRXSDR: 16-канальна SDR-платформа для повітряної розвідки та систем CRPA.",
+      benefits: [
+        "Повітряна 16-канальна РТР-станція",
+        "Шукає пріоритетні цілі та передає точні координати",
+        "Працює за 10+ км від фронту",
+      ],
+      specs: [
+        ["Кількість каналів", "16 когерентних"],
+        ["Підтримка антен", "CRPA arrays"],
+        ["Носій", "UAV payload / airborne"],
+        ["Точність DOA", "Підвищена (TBD)"],
+        ["Діапазон", "TBD (expanded vs 4K)"],
+        ["Дальність роботи", "10+ км від фронту"],
+      ],
+    },
+  ],
+  en: [
+    {
+      summary: "FARADAY SDR is the foundation for different ELINT systems.",
+      benefits: [
+        "Platform for SDR station builds",
+        "Designed for radio intelligence tasks",
+        "Can operate as part of the broader FARADAY ecosystem",
+      ],
+      specs: [
+        ["Status", "Available now"],
+        ["Platform", "4K SDR"],
+        ["Datasheet", "Will be added after specs are finalized"],
+      ],
+    },
+    {
+      summary:
+        "Ground direction-finding system that sends tactical parameters into the Signal Source Table.",
+      benefits: [
+        "MUSIC algorithm for real field conditions",
+        "Supports 2+ simultaneous sources per window",
+        "Integration through a standard network stack",
+      ],
+      specs: [
+        ["Direction-finding accuracy", "8°"],
+        ["Output update rate", "10 Hz"],
+        ["Transmission interface", "1GbE"],
+      ],
+    },
+    {
+      summary:
+        "FARADAY 16KRXSDR: 16-channel SDR platform for airborne intelligence and CRPA antenna systems.",
+      benefits: [
+        "Airborne 16-channel RECON station",
+        "Prioritizes high-value targets and transmits precise coordinates",
+        "Operates 10+ km from front line",
+      ],
+      specs: [
+        ["Number of Channels", "16 coherent"],
+        ["Antenna Support", "CRPA arrays"],
+        ["Platform", "UAV payload / airborne"],
+        ["DOA Accuracy", "Enhanced (TBD)"],
+        ["Frequency Range", "TBD (expanded vs 4K)"],
+        ["Operational Range", "10+ km from front"],
+      ],
+    },
+  ],
+};
+
 const primaryAction =
   "cursor-pointer transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#48ff7d] hover:shadow-[0_0_24px_rgba(37,248,96,0.28)] active:translate-y-0 active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-[#25f860]/60";
 
@@ -293,9 +406,13 @@ export default function FaradayPage() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrollY, setScrollY] = useState(0);
+  const [activeSection, setActiveSection] = useState("");
   const [dynamicWordIndex, setDynamicWordIndex] = useState(0);
   const [wordFade, setWordFade] = useState(true);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
+  const [selectedProductIndex, setSelectedProductIndex] = useState<
+    number | null
+  >(null);
   const [language, setLanguage] = useState<Language>("ua");
   const [formStatus, setFormStatus] = useState<
     "idle" | "sending" | "sent" | "error"
@@ -304,7 +421,13 @@ export default function FaradayPage() {
   const observerRef = useRef<IntersectionObserver | null>(null);
 
   const t = copy[language];
-  const dynamicWords = ["сигнали", "загрози", "ворога", "рухи", "частоти"];
+  const selectedProduct =
+    selectedProductIndex === null ? null : t.products[selectedProductIndex];
+  const selectedProductDetails =
+    selectedProductIndex === null
+      ? null
+      : productDetails[language][selectedProductIndex];
+  const dynamicWords = t.heroWords;
 
   useEffect(() => {
     const wordInterval = setInterval(() => {
@@ -320,7 +443,17 @@ export default function FaradayPage() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrollY(window.scrollY);
+      const nextScrollY = window.scrollY;
+      setScrollY(nextScrollY);
+
+      const sectionIds = ["products", "team", "contact"];
+      const current = sectionIds.findLast((id) => {
+        const element = document.getElementById(id);
+        if (!element) return false;
+        return element.offsetTop <= nextScrollY + window.innerHeight * 0.38;
+      });
+
+      setActiveSection(current ?? "");
     };
 
     handleScroll();
@@ -347,6 +480,25 @@ export default function FaradayPage() {
 
     return () => observerRef.current?.disconnect();
   }, []);
+
+  useEffect(() => {
+    if (selectedProductIndex === null) {
+      return;
+    }
+
+    document.body.style.overflow = "hidden";
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setSelectedProductIndex(null);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [selectedProductIndex]);
 
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
@@ -394,17 +546,17 @@ export default function FaradayPage() {
       {/* Desktop header */}
       <header className="fixed top-4 left-6 right-6 md:left-8 md:right-8 lg:left-12 lg:right-12 z-40 flex items-center justify-between">
         {/* Logo + nav pill */}
-        <div className="flex items-center gap-0 border border-[#25f860]/20 backdrop-blur-md bg-[#0A0A0A]/80 rounded-lg h-11 px-4 py-5">
+        <div className="flex min-h-16 items-center gap-0 rounded-xl bg-[#0A0A0A]/80 px-5 py-4 backdrop-blur-md md:h-11 md:min-h-0 md:rounded-lg md:border md:border-[#25f860]/20 md:px-4 md:py-5">
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className={`flex items-center gap-0 pr-5 border-r border-[#25f860]/15 hover:opacity-70 ${quietAction}`}
+            className={`flex items-center gap-0 hover:opacity-70 md:border-r md:border-[#25f860]/15 md:pr-5 ${quietAction}`}
           >
             <Image
               src="/logo.svg"
               alt="Faraday"
               width={80}
               height={20}
-              className="h-[24px] w-auto"
+              className="h-[28px] w-auto md:h-[24px]"
               priority
             />
           </button>
@@ -413,7 +565,11 @@ export default function FaradayPage() {
               <button
                 key={item.id}
                 onClick={() => scrollToSection(item.id)}
-                className={`text-sm font-medium text-[#A7ABB3] hover:text-[#25f860] ${quietAction}`}
+                className={`text-sm font-medium ${
+                  activeSection === item.id
+                    ? "text-[#25f860]"
+                    : "text-[#A7ABB3] hover:text-[#25f860]"
+                } ${quietAction}`}
               >
                 {item.label}
               </button>
@@ -461,13 +617,17 @@ export default function FaradayPage() {
 
       {/* Mobile dropdown menu - popup card */}
       {isMenuOpen && (
-        <div className="fixed top-[76px] left-6 right-6 z-50 border border-[#25f860]/20 backdrop-blur-xl bg-[#0D0D0D]/95 rounded-xl overflow-hidden shadow-2xl shadow-black/60 md:hidden">
+        <div className="fixed top-[96px] left-6 right-6 z-50 border border-[#25f860]/20 backdrop-blur-xl bg-[#0D0D0D]/95 rounded-xl overflow-hidden shadow-2xl shadow-black/60 md:hidden">
           <nav className="flex flex-col py-2">
             {t.nav.map((item) => (
               <button
                 key={item.id}
                 onClick={() => scrollToSection(item.id)}
-                className={`w-full text-left px-5 py-3.5 text-sm font-medium text-[#A7ABB3] hover:text-[#25f860] hover:bg-[#25f860]/5 border-b border-[#25f860]/8 last:border-0 ${quietAction}`}
+                className={`w-full text-left px-5 py-3.5 text-sm font-medium hover:bg-[#25f860]/5 border-b border-[#25f860]/8 last:border-0 ${
+                  activeSection === item.id
+                    ? "text-[#25f860]"
+                    : "text-[#A7ABB3] hover:text-[#25f860]"
+                } ${quietAction}`}
               >
                 {item.label}
               </button>
@@ -504,14 +664,10 @@ export default function FaradayPage() {
         ref={heroRef}
         className={`relative min-h-screen flex flex-col items-center justify-center px-6 md:px-12 lg:px-24 pt-24 pb-16 md:pt-32 md:pb-24 transition-all duration-[1200ms] ease-[cubic-bezier(0.16,1,0.3,1)] overflow-hidden ${isLoaded ? "scale-100 opacity-100" : "scale-[1.03] opacity-0"}`}
       >
-        <MagneticDots
-          dotColor="rgba(37, 248, 96, 0.2)"
-          dotSpacing={24}
-          dotSize={1.5}
-          rippleRadius={150}
-          rippleStrength={30}
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#25f860]/5 via-transparent to-transparent pointer-events-none" />
+        <div className="absolute inset-0 z-0 opacity-80">
+          <TargetScanner />
+        </div>
+        <div className="absolute left-1/2 top-[46%] z-[1] h-[420px] w-[min(92vw,980px)] -translate-x-1/2 -translate-y-1/2 rounded-[32px] bg-[#0A0A0A]/70 blur-3xl pointer-events-none" />
 
         <div
           className="max-w-5xl w-full mx-auto relative z-10"
@@ -520,18 +676,13 @@ export default function FaradayPage() {
           }}
         >
           <div className="text-center mb-8 md:mb-12">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg mb-6 text-[10px] md:text-xs text-[#A7ABB3] border border-[#25f860]/20 bg-[#25f860]/5 stagger-reveal">
-              <span className="w-1 h-1 rounded-full bg-[#25f860] animate-pulse" />
-              SIGINT / ELINT / COMINT
-            </div>
-
             <h1 className="text-[36px] leading-[1.05] sm:text-[52px] md:text-[72px] md:leading-[1.05] font-bold mb-4 md:mb-6 text-balance tracking-tight">
               <span
                 className={`block stagger-reveal transition-all duration-500 ${
                   wordFade ? "opacity-100 blur-0" : "opacity-0 blur-lg"
                 }`}
               >
-                Виявляй{" "}
+                {t.heroPrefix}{" "}
                 <span className="text-[#25f860]">
                   <AnimatedText
                     key={dynamicWordIndex}
@@ -544,16 +695,21 @@ export default function FaradayPage() {
                 className="block stagger-reveal"
                 style={{ animationDelay: "90ms" }}
               >
-                в реальному часі
+                {t.heroSuffix}
               </span>
             </h1>
             <p
               className="text-[#A7ABB3] text-sm md:text-lg max-w-[560px] mx-auto mb-6 md:mb-8 leading-relaxed stagger-reveal"
               style={{ animationDelay: "180ms" }}
             >
-              Faraday RIB — мобільна платформа радіотехнічної розвідки для
-              виявлення та аналізу радіоелектронних засобів противника на
-              передовій.
+              {language === "ua" ? (
+                <>
+                  <span>Екосистема продуктів для радіорозвідки,</span>
+                  <span className="block sm:inline"> зроблена в Україні</span>
+                </>
+              ) : (
+                t.productsTitle
+              )}
             </p>
             <div
               className="stagger-reveal flex flex-row gap-3 justify-center"
@@ -561,41 +717,38 @@ export default function FaradayPage() {
             >
               <Button
                 onClick={() => scrollToSection("contact")}
-                className={`flex-1 sm:flex-none px-5 py-2.5 h-10 text-sm rounded-lg bg-[#25f860] text-[#0A0A0A] font-semibold ${primaryAction}`}
+                className={`w-auto px-5 py-2.5 h-10 text-sm rounded-lg bg-[#25f860] text-[#0A0A0A] font-semibold ${primaryAction}`}
               >
-                Замовити демо
-              </Button>
-              <Button
-                onClick={() => scrollToSection("products")}
-                className={`flex-1 sm:flex-none px-5 py-2.5 h-10 text-sm rounded-lg border border-[#25f860]/30 bg-transparent text-[#F2F3F5] ${secondaryAction}`}
-              >
-                Документація
+                {t.demo}
               </Button>
             </div>
           </div>
+        </div>
+      </section>
 
-          {/* Product Image Placeholder */}
-          <div
-            className="mt-12 md:mt-20 stagger-reveal"
-            style={{ animationDelay: "360ms" }}
-          >
-            <div className="relative aspect-[16/9] rounded-xl overflow-hidden border border-[#25f860]/20 bg-[#0A0A0A]">
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="text-center">
-                  <div className="w-32 h-32 mx-auto mb-6 rounded-full border-2 border-[#25f860]/30 flex items-center justify-center">
-                    <Radio className="w-16 h-16 text-[#25f860]/60" />
-                  </div>
-                  <p className="text-[#A7ABB3] text-sm font-mono">
-                    FARADAY RIB SYSTEM
-                  </p>
+      <section
+        aria-label={language === "ua" ? "Партнери" : "Partners"}
+        className="relative overflow-hidden border-y border-[#25f860]/10 bg-[#050706] py-6"
+      >
+        <div className="partner-marquee-track flex w-max">
+          {Array.from({ length: 3 }).map((_, groupIndex) => (
+            <div key={groupIndex} className="flex shrink-0 gap-2 px-1 md:gap-4 md:px-2">
+              {partnerLogos.map((logo) => (
+                <div
+                  key={`${logo.alt}-${groupIndex}`}
+                  className="flex h-12 min-w-[29vw] items-center justify-center px-2 md:h-20 md:min-w-[250px] md:px-10"
+                >
+                  <Image
+                    src={logo.src}
+                    alt={logo.alt}
+                    width={190}
+                    height={52}
+                    className={`w-auto object-contain opacity-90 ${logo.className}`}
+                  />
                 </div>
-              </div>
-              {/* Animated scan line */}
-              <div className="absolute inset-0 overflow-hidden">
-                <div className="absolute w-full h-[2px] bg-gradient-to-r from-transparent via-[#25f860]/50 to-transparent animate-scan" />
-              </div>
+              ))}
             </div>
-          </div>
+          ))}
         </div>
       </section>
 
@@ -603,30 +756,21 @@ export default function FaradayPage() {
         id="products"
         className="relative min-h-screen px-5 py-12 md:px-12 md:py-14 lg:px-24 animate-on-scroll"
       >
-        <div className="mx-auto flex min-h-[calc(100vh-6rem)] w-full max-w-6xl flex-col justify-start gap-10 pt-8 md:pt-10 lg:pt-12">
-          <div className="mx-auto max-w-5xl text-center">
-            <h2 className="text-[30px] font-bold leading-[1.05] tracking-tight md:text-[52px] lg:text-[58px]">
-              {t.productsTitle}
-            </h2>
-            {t.productsText && (
-              <p className="mx-auto mt-4 max-w-[620px] text-sm leading-relaxed text-[#A7ABB3] md:text-base">
-                {t.productsText}
-              </p>
-            )}
-            <Button
-              onClick={() => scrollToSection("contact")}
-              className={`mt-6 h-11 rounded-lg bg-[#25f860] px-5 text-sm font-semibold text-[#0A0A0A] ${primaryAction}`}
-            >
-              {t.preorder} <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-          </div>
-
+        <div className="mx-auto flex min-h-[calc(100vh-6rem)] w-full max-w-6xl flex-col justify-center gap-10">
+          <h2 className="text-left text-[30px] font-bold leading-[1.05] tracking-tight md:text-[52px]">
+            {t.productsHeading}
+          </h2>
           <div className="grid gap-4 lg:grid-cols-3">
             {t.products.map((product, index) => (
-              <article
+              <button
                 key={product.name}
-                id={index === 1 ? "ground" : undefined}
-                className="rounded-xl border border-[#25f860]/12 bg-[#111312] p-4 transition-all duration-200 hover:-translate-y-1 hover:border-[#25f860]/40 hover:bg-[#151915] hover:shadow-[0_0_28px_rgba(37,248,96,0.10)]"
+                id={index === 1 ? "ground" : index === 2 ? "air" : undefined}
+                type="button"
+                onClick={() => setSelectedProductIndex(index)}
+                className="group rounded-xl border border-[#25f860]/12 bg-[#111312] p-4 text-left transition-all duration-200 hover:-translate-y-1 hover:border-[#25f860]/40 hover:bg-[#151915] hover:shadow-[0_0_28px_rgba(37,248,96,0.10)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#25f860]/60"
+                aria-label={`${product.name}: ${
+                  language === "ua" ? "відкрити деталі продукту" : "open product details"
+                }`}
               >
                 <div className="relative h-[150px] overflow-hidden rounded-lg border border-[#25f860]/10 bg-[#050706] md:h-[180px] lg:h-[170px]">
                   <Image
@@ -638,12 +782,17 @@ export default function FaradayPage() {
                   />
                 </div>
                 <div className="pt-4">
-                  <div className="mb-3 inline-flex rounded-md border border-[#25f860]/20 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-[#25f860]">
-                    {product.state}
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <div className="mb-3 inline-flex rounded-md border border-[#25f860]/20 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-[#25f860]">
+                        {product.state}
+                      </div>
+                      <h3 className="text-lg font-semibold leading-tight md:text-xl">
+                        {product.name}
+                      </h3>
+                    </div>
+                    <ArrowRight className="mt-8 h-4 w-4 flex-none text-[#25f860] transition-transform group-hover:translate-x-1" />
                   </div>
-                  <h3 className="text-lg font-semibold leading-tight md:text-xl">
-                    {product.name}
-                  </h3>
                   {product.text && (
                     <p className="mt-2 text-sm leading-relaxed text-[#A7ABB3]">
                       {product.text}
@@ -660,98 +809,118 @@ export default function FaradayPage() {
                     ))}
                   </div>
                 </div>
-              </article>
+              </button>
             ))}
           </div>
         </div>
       </section>
 
-      <section
-        id="air"
-        className="relative px-5 py-16 md:px-12 md:py-28 lg:px-24 animate-on-scroll"
-      >
-        <div className="mx-auto w-full max-w-6xl">
-          <div className="grid gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
-            <div>
-              <h2 className="max-w-[700px] text-[30px] font-bold leading-[1.05] tracking-tight md:text-[56px]">
-                {t.airTitle}
-              </h2>
-              <p className="mt-5 max-w-[620px] text-sm leading-relaxed text-[#A7ABB3] md:text-base">
-                {t.airText}
-              </p>
-              <Button
-                onClick={() => scrollToSection("contact")}
-                className={`mt-7 h-11 rounded-lg bg-[#25f860] px-5 text-sm font-semibold text-[#0A0A0A] ${primaryAction}`}
-              >
-                {t.notifyLaunch} <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
+      {selectedProduct && selectedProductDetails && selectedProductIndex !== null && (
+        <div
+          className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-[#050505]/82 px-3 py-3 backdrop-blur-md md:items-center md:px-4 md:py-6"
+          role="dialog"
+          aria-modal="true"
+          aria-label={selectedProduct.name}
+          onClick={() => setSelectedProductIndex(null)}
+        >
+          <div
+            className="relative grid min-h-[calc(100dvh-1.5rem)] w-full max-w-5xl overflow-hidden rounded-xl border border-[#25f860]/18 bg-[#0D0F0E] p-4 shadow-2xl shadow-black/70 md:max-h-[92vh] md:min-h-0 md:overflow-y-auto md:p-7 lg:grid-cols-[0.9fr_1.1fr] lg:gap-7"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <button
+              type="button"
+              onClick={() => setSelectedProductIndex(null)}
+              className={`absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-lg border border-[#25f860]/18 bg-[#0A0A0A] text-[#D9DDE3] hover:border-[#25f860]/50 hover:text-[#25f860] ${quietAction}`}
+              aria-label={language === "ua" ? "Закрити" : "Close"}
+            >
+              <X className="h-4 w-4" />
+            </button>
+
+            <div className="flex items-center justify-center pr-0 pt-10 lg:min-h-[520px] lg:pr-4 lg:pt-0">
+              <div className="relative h-[170px] w-full sm:h-[220px] md:h-[360px] lg:h-[480px]">
+                <Image
+                  src={productImages[selectedProductIndex]}
+                  alt={selectedProduct.name}
+                  fill
+                  sizes="(min-width: 1024px) 42vw, 100vw"
+                  className="object-contain"
+                />
+              </div>
             </div>
-            <div className="rounded-xl border border-[#25f860]/12 bg-[#111312] p-5 md:p-6">
-              <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-                <h3 className="text-lg font-semibold">{t.preliminary}</h3>
-                <span className="rounded-md border border-[#25f860]/20 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-[#25f860]">
-                  {t.subjectToChange}
+
+            <div className="pt-4 lg:pt-10">
+              <span className="inline-flex rounded-md border border-[#25f860]/20 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-[#25f860]">
+                {selectedProduct.state}
+              </span>
+              <h2 className="mt-4 pr-12 text-[26px] font-bold leading-[1.05] tracking-tight md:mt-5 md:text-[48px]">
+                {selectedProduct.name}
+              </h2>
+              <p className="mt-5 text-sm leading-relaxed text-[#A7ABB3] md:text-base">
+                {selectedProductDetails.summary}
+              </p>
+
+              <div className="mt-7">
+                <h3 className="text-lg font-semibold">
+                  {language === "ua" ? "Переваги" : "Benefits"}
+                </h3>
+                <ul className="mt-4 space-y-2 text-sm leading-relaxed text-[#A7ABB3] md:space-y-3">
+                  {selectedProductDetails.benefits.map((benefit) => (
+                    <li key={benefit} className="flex gap-3">
+                      <span className="mt-2 h-1.5 w-1.5 flex-none rounded-full bg-[#25f860]" />
+                      <span>{benefit}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="mt-7">
+                <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+                  <h3 className="text-lg font-semibold">
+                    {language === "ua" ? "ТТХ" : "Specs"}
+                  </h3>
+                  <span className="rounded-md border border-[#25f860]/20 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-[#25f860]">
+                    {language === "ua" ? "Попередні" : "Subject to change"}
+                  </span>
+                </div>
+                <div className="overflow-x-auto">
+                  <table className="w-full min-w-0 text-left text-sm md:min-w-[420px]">
+                    <tbody>
+                      {selectedProductDetails.specs.map(([parameter, value]) => (
+                        <tr
+                          key={parameter}
+                          className="border-b border-[#25f860]/8 last:border-0"
+                        >
+                          <td className="py-3 pr-4 text-[#A7ABB3]">
+                            {parameter}
+                          </td>
+                          <td className="py-3 font-semibold text-[#25f860]">
+                            {value}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div className="mt-7 flex flex-wrap gap-3">
+                <Button
+                  onClick={() => {
+                    setSelectedProductIndex(null);
+                    setTimeout(() => scrollToSection("contact"), 0);
+                  }}
+                  className={`h-11 rounded-lg bg-[#25f860] px-5 text-sm font-semibold text-[#0A0A0A] ${primaryAction}`}
+                >
+                  {t.preorder} <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+                <span className="inline-flex h-11 items-center rounded-lg border border-[#25f860]/20 px-5 text-sm font-semibold text-[#A7ABB3]">
+                  {language === "ua" ? "PDF буде додано" : "PDF coming soon"}
                 </span>
               </div>
-              <div className="overflow-x-auto">
-                <table className="w-full min-w-[480px] text-left text-sm">
-                  <thead className="text-xs text-[#A7ABB3]">
-                    <tr className="border-b border-[#25f860]/12">
-                      <th className="py-3 pr-4 font-medium">
-                        {language === "ua" ? "Параметр" : "Parameter"}
-                      </th>
-                      <th className="py-3 font-medium">
-                        {language === "ua" ? "Значення" : "Value"}
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {t.specs.map(([parameter, value]) => (
-                      <tr
-                        key={parameter}
-                        className="border-b border-[#25f860]/8 last:border-0"
-                      >
-                        <td className="py-3 pr-4 text-[#D9DDE3]">
-                          {parameter}
-                        </td>
-                        <td className="py-3 font-semibold text-[#25f860]">
-                          {value}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-12">
-            <h3 className="text-[26px] font-bold leading-tight md:text-[36px]">
-              {t.applicationsTitle}
-            </h3>
-            <div className="mt-6 grid gap-4 md:grid-cols-3">
-              {t.airCards.map(([title, ...items]) => (
-                <div
-                  key={title}
-                  className="rounded-xl border border-[#25f860]/12 bg-[#111312] p-6"
-                >
-                  <h4 className="text-lg font-semibold leading-tight">
-                    {title}
-                  </h4>
-                  <ul className="mt-5 space-y-3 text-sm leading-relaxed text-[#A7ABB3]">
-                    {items.map((item) => (
-                      <li key={item} className="flex gap-2">
-                        <span className="mt-2 h-1.5 w-1.5 flex-none rounded-full bg-[#25f860]" />
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
             </div>
           </div>
         </div>
-      </section>
+      )}
 
       <section
         id="team"
@@ -775,69 +944,6 @@ export default function FaradayPage() {
                   </div>
                   <div className="mt-4 text-2xl font-bold">{count}</div>
                   <div className="mt-2 text-sm text-[#A7ABB3]">{details}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section
-        id="technology"
-        className="relative border-y border-[#25f860]/10 bg-[#050505] px-5 py-16 md:px-12 md:py-28 lg:px-24 animate-on-scroll"
-      >
-        <div className="mx-auto w-full max-w-6xl">
-          <div>
-            <h2 className="max-w-[760px] text-[30px] font-bold leading-[1.05] tracking-tight md:text-[52px]">
-              {t.techTitle}
-            </h2>
-          </div>
-
-          <div className="mt-10 grid gap-4 lg:grid-cols-[0.85fr_1.15fr]">
-            <div className="rounded-xl border border-[#25f860]/12 bg-[#111312] p-6">
-              <h3 className="text-xl font-semibold">{t.apiTitle}</h3>
-              <div className="mt-5 grid gap-3">
-                {t.apiExamples.map((item) => (
-                  <div
-                    key={item}
-                    className="rounded-lg border border-[#25f860]/10 bg-[#0A0A0A] px-4 py-3 text-sm text-[#D9DDE3]"
-                  >
-                    {item}
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="rounded-xl border border-[#25f860]/12 bg-[#111312] p-6">
-              <h3 className="text-xl font-semibold">{t.datasheetTitle}</h3>
-              <p className="mt-4 text-sm leading-relaxed text-[#A7ABB3]">
-                {language === "ua"
-                  ? "ТТХ, API та datasheet для максимально повного опису продукту."
-                  : "Specs, API and datasheet for the full product reference."}
-              </p>
-              <Button
-                onClick={() => scrollToSection("contact")}
-                className={`mt-6 h-11 rounded-lg border border-[#25f860]/30 bg-transparent px-5 text-sm font-semibold text-[#F2F3F5] ${secondaryAction}`}
-              >
-                {language === "ua" ? "Запитати datasheet" : "Request datasheet"}
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-
-          <div className="mt-10">
-            <h3 className="text-[24px] font-bold leading-tight md:text-[34px]">
-              {t.builtOnTitle}
-            </h3>
-            <div className="mt-5 grid gap-4 md:grid-cols-3">
-              {t.roadmap.map(([title, text]) => (
-                <div
-                  key={title}
-                  className="rounded-xl border border-[#25f860]/12 bg-[#111312] p-5"
-                >
-                  <h3 className="text-base font-semibold">{title}</h3>
-                  <p className="mt-3 text-sm leading-relaxed text-[#A7ABB3]">
-                    {text}
-                  </p>
                 </div>
               ))}
             </div>
@@ -901,51 +1007,17 @@ export default function FaradayPage() {
             <p className="mt-5 max-w-[620px] text-sm leading-relaxed text-[#A7ABB3] md:text-base">
               {t.formNotice}
             </p>
-            <p className="mt-6 text-sm font-semibold text-[#D9DDE3]">
-              {t.contactNext}
-            </p>
-            <div className="mt-5 grid max-w-[520px] grid-cols-2 gap-4">
-              <div className="rounded-xl border border-[#25f860]/12 bg-[#111312] p-4">
-                <div className="relative aspect-square overflow-hidden">
-                  <Image
-                    src="/faraday-whatsapp.svg"
-                    alt={t.qr}
-                    fill
-                    sizes="320px"
-                    className="object-contain"
-                  />
-                </div>
-                <p className="mt-3 text-center text-xs font-mono text-[#25f860]">
-                  {t.qr}
-                </p>
-              </div>
-              <div className="rounded-xl border border-[#25f860]/12 bg-[#111312] p-4">
-                <div className="grid aspect-square grid-cols-7 gap-1 rounded-lg p-4">
-                  {Array.from({ length: 49 }).map((_, index) => (
-                    <span
-                      key={index}
-                      className={`rounded-[1px] ${
-                        [
-                          0, 1, 2, 7, 14, 36, 42, 43, 44, 6, 13, 20, 28, 35, 41,
-                          46, 48, 24, 30, 32,
-                        ].includes(index)
-                          ? "bg-[#25f860]"
-                          : "bg-[#25f860]/12"
-                      }`}
-                    />
-                  ))}
-                </div>
-                <p className="mt-3 text-center text-xs font-mono text-[#25f860]">
-                  {t.emailQr}
-                </p>
-              </div>
+            <div className="mt-7 flex flex-col items-start gap-3">
+              <p className="max-w-[520px] text-xl font-semibold leading-snug text-[#D9DDE3] md:text-2xl">
+                {t.contactNext}
+              </p>
+              <a
+                href="mailto:hello@faraday.tel"
+                className={`text-lg font-semibold text-[#25f860] hover:text-[#48ff7d] md:text-xl ${quietAction}`}
+              >
+                hello@faraday.tel
+              </a>
             </div>
-            <a
-              href="mailto:hello@faraday.tel"
-              className={`mt-5 inline-flex text-lg font-semibold text-[#25f860] hover:text-[#48ff7d] ${quietAction}`}
-            >
-              hello@faraday.tel
-            </a>
           </div>
 
           <form
@@ -1075,33 +1147,42 @@ export default function FaradayPage() {
                 ))}
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-6 text-sm md:grid-cols-4">
-              {[
-                ["Продукти", "SDR", "AERO ELINT"],
-                ["Застосування", "Дрон-детектор", "UAV ELINT"],
-                ["Компанія", "Команда", "Roadmap"],
-                ["Соцмережі", "LinkedIn", "Signal"],
-              ].map(([title, first, second]) => (
-                <div key={title}>
-                  <div className="mb-3 font-semibold text-[#F2F3F5]">
-                    {title}
-                  </div>
-                  <div className="space-y-2 text-[#A7ABB3]">
-                    <button
-                      onClick={() => scrollToSection("products")}
-                      className={`block hover:text-[#25f860] ${quietAction}`}
-                    >
-                      {first}
-                    </button>
-                    <button
-                      onClick={() => scrollToSection("contact")}
-                      className={`block hover:text-[#25f860] ${quietAction}`}
-                    >
-                      {second}
-                    </button>
-                  </div>
+            <div className="grid grid-cols-1 gap-8 text-sm sm:grid-cols-2">
+              <div>
+                <div className="mb-4 text-lg font-semibold text-[#F2F3F5]">
+                  {t.footerProductsTitle}
                 </div>
-              ))}
+                <div className="space-y-3 text-[#A7ABB3]">
+                  {t.footerProducts.map((product, index) => (
+                    <button
+                      key={product}
+                      onClick={() => setSelectedProductIndex(index)}
+                      className={`block text-left hover:text-[#25f860] ${quietAction}`}
+                    >
+                      {product}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <div className="mb-4 text-lg font-semibold text-[#F2F3F5]">
+                  {t.footerContactsTitle}
+                </div>
+                <div className="space-y-3 text-[#A7ABB3]">
+                  <button
+                    onClick={() => scrollToSection("contact")}
+                    className={`block text-left hover:text-[#25f860] ${quietAction}`}
+                  >
+                    {t.footerContacts[0]}
+                  </button>
+                  <a
+                    href="mailto:hello@faraday.tel"
+                    className={`block hover:text-[#25f860] ${quietAction}`}
+                  >
+                    {t.footerContacts[1]}
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
           <div className="mt-10 border-t border-[#25f860]/10 pt-6 text-xs text-[#A7ABB3]">

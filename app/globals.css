@@ -150,6 +150,11 @@
     animation: fadeInUp 0.8s ease-out forwards;
   }
 
+  .partner-marquee-track {
+    animation: partnerMarqueeRightToLeft 28s linear infinite;
+    will-change: transform;
+  }
+
   @keyframes fadeInUp {
     from {
       opacity: 0;
@@ -176,6 +181,21 @@
     }
     50% {
       width: 100%;
+    }
+  }
+
+  @keyframes partnerMarqueeRightToLeft {
+    from {
+      transform: translate3d(0, 0, 0);
+    }
+    to {
+      transform: translate3d(-33.333333%, 0, 0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .partner-marquee-track {
+      animation: none;
     }
   }
 }
