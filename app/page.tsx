@@ -549,7 +549,7 @@ export default function FaradayPage() {
         <div className="flex min-h-16 items-center gap-0 rounded-xl bg-[#0A0A0A]/80 px-5 py-4 backdrop-blur-md md:h-11 md:min-h-0 md:rounded-lg md:px-4 md:py-5">
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className={`flex items-center gap-0 hover:opacity-70 md:border-r md:border-[#25f860]/15 md:pr-5 ${quietAction}`}
+            className={`flex items-center gap-0 hover:opacity-70 md:pr-5 ${quietAction}`}
           >
             <Image
               src="/logo.svg"
